@@ -6,6 +6,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 import os
 
+from datetime import date
+
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -230,3 +232,23 @@ def home(post_id = ""):
 
     
 
+# about page
+@app.route('/about')
+@login_required
+def about():
+    endpoint_title = 'about'
+    return render_template('about.html', data={ 'title':endpoint_title, 'Navbar':Navbar})
+
+
+
+@app.route('/profile')
+@login_required
+def profile():
+        # image = current_user.image.decode('utf-8')
+        # print(current_user.image)
+        today = date.today()
+        born = current_user.birth_date
+        age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+        endpoint_title = 'profile'
+        
+        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age  })
