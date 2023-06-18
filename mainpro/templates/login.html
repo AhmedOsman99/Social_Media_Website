@@ -1,0 +1,45 @@
+<!-- social_media/templates/register.html -->
+{% extends 'base.html' %}
+
+{% block navbar %}
+{% endblock %}
+{% block style %} 
+<style>
+    body{
+        background-color: #232930;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container m-auto mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="card-body p-5">
+                        <h1 class="card-title mb-5">Log In</h1>
+                        <form class="row g-3" method="POST" >
+                            {{data.form.hidden_tag()}}
+                            <div class="col-md-12">
+                                {{ data.form.email.label(class="form-label") }}
+                                {{ data.form.email(class='form-control') }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ data.form.password.label(class="form-label") }}
+                                {{ data.form.password(class='form-control') }}
+                            </div>
+                            
+                            <div class="col-12">
+                                {{ data.form.submit(class="btn btn-primary mt-2") }}
+                            </div>
+                          </form>
+                          <div class="pt-3">
+                            <small class="text-muted">
+                                Need an Account ? <a class="ml-2" href="{{ url_for('register') }}">Register</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
