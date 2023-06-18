@@ -10,13 +10,13 @@
     </button>
 </div>
 
-<div class="d-flex justify-content-around"><h1>Add Post</h1></div>
 
 <!-- add post form -->
-    <div>
+    <div  class="">
         <form action="" method="POST" enctype="multipart/form-data">
             {{ data.form.hidden_tag() }}
-            
+            <div class="d-flex justify-content-around"><h1>Add Post</h1></div>
+
             <fieldset class = "form-group">
                 <legend class="border-bottom mb4"></legend>
                 <div class="form-group">
@@ -78,11 +78,11 @@
         </form>
     </div>
 
-
-<div class="d-flex justify-content-around m-3"><h1>Posts</h1></div>
+<br>
+<div class="d-flex justify-content-around m-5"><h1>Posts</h1></div>
 
 <!-- choose which posts you want to see -->
-<div class="d-flex justify-content-around ">
+<div class=" d-flex justify-content-around ">
     <div class="form-check">
         <input class="form-check-input" type="radio" name="exampleRadios" id="publicid" value="option1" checked onchange="checkRadio()" >
         <label class="form-check-label" for="exampleRadios1">
@@ -107,9 +107,9 @@
 <!-- user posts only -->
 <div class="only_me_posts_container d-none" id="only_me_posts_container">
 {% for post in data.posts_onlyme %}
-        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
-            
-            <div class=" m-2 d-flex personal_info" >
+
+        <div class=" border border-secondary p-3 shadow-lg  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            <div class="m-2 d-flex personal_info" >
                 
                 <div class="m-1 ">
                     <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
@@ -154,14 +154,25 @@
                 </div>
             </div>
             <hr>
-            <div class="m-2 d-flex post-info flex-column">
-                <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
-                <div class=" p-3  d-flex "><div>{{post.Post.content}}</div></div>
+            <div class="container my-2">
+                <div class="row">
                 {% if post.Post.post_image_filename %}
-                    <div class="d-flex justify-content-around image_container"> 
-                        <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
+                    <div class="col-md-4 d-flex justify-content-around my-3">
+                        <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid">
                     </div>
+                    <div class="col-md-8">
+                        <h2>{{post.Post.title}}</h2>
+                        <p>{{post.Post.content}}</p>
+                    </div>
+                    
+
+                {% else %}
+                <div class="col-md-10">
+                    <h2>{{post.Post.title}}</h2>
+                    <p class="mx-5">{{post.Post.content}}</p>
+                </div>
                 {% endif %}
+                </div>
             </div>
             
         </div>
@@ -172,8 +183,8 @@
 <div class="public_posts_container" id="public_posts_container">
 {% for post in data.posts_public %}
 
-        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
-            <div class=" m-2 d-flex personal_info" >
+        <div class="border border-secondary p-3 shadow-lg  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            <div class="  d-flex personal_info" >
                 <div class="m-1 ">
                     <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="pp" srcset="">
                     <!-- <img  class="rounded-5" width="50px" src="../static/profile_images/{{ post.User.profile_image_filename }}" alt="pp2" srcset="">
@@ -252,7 +263,7 @@
 
             <hr>
             
-            <div class="m-2 d-flex post-info flex-column">
+            <!-- <div class="m-1 d-flex post-info flex-column">
                 <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
                 <div class=" p-3  d-flex justify-content-center h-auto w-100"><div class=" h-auto w-100">{{post.Post.content}}</div></div>
                 {% if post.Post.post_image_filename %}
@@ -260,6 +271,27 @@
                     <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
                 </div>
                 {% endif %}
+            </div> -->
+
+            <div class="container my-2">
+                <div class="row">
+                {% if post.Post.post_image_filename %}
+                    <div class="col-md-4 d-flex justify-content-around my-3">
+                        <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <h2>{{post.Post.title}}</h2>
+                        <p>{{post.Post.content}}</p>
+                    </div>
+                    
+
+                {% else %}
+                <div class="col-md-10">
+                    <h2>{{post.Post.title}}</h2>
+                    <p class="mx-5">{{post.Post.content}}</p>
+                </div>
+                {% endif %}
+                </div>
             </div>
             
         </div>
@@ -270,7 +302,7 @@
 <div class="friends_only_post_container d-none" id="friends_only_post_container">
     {% for post in data.friends_only_posts %}
     
-            <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            <div class="border border-secondary p-3 shadow-lg containe post_container m-5 d-flex flex-column justify-content-around  border" >
                 
                 <div class=" m-2 d-flex personal_info" >
                     
@@ -288,6 +320,7 @@
                     </div>
                 </div>
                 <hr>
+
                 <div class="m-2 d-flex post-info flex-column">
                     <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
                     <div class=" p-3  d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
@@ -297,6 +330,9 @@
                         </div>
                     {% endif %}
                 </div>
+
+                
+
                 
             </div>
     {% endfor %}
@@ -305,7 +341,7 @@
 
 <!-- edit window -->
 {% if data.post_to_edit %}
-    <div class="edit_post_container" id="edit_post_container_id">
+    <div class="border border-secondary p-3 shadow-lg  edit_post_container" id="edit_post_container_id">
 
         <!-- close sign -->
         <a class="text-dark closesign" href="{{ url_for('home') }}"  onclick="closetab()">
@@ -340,7 +376,7 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ data.form.title(class = "input_x form-control", value= data.post_to_edit.title)  }}
+                            {{ data.form.title(class = "input_x form-control")  }}
                         {% endif %}
                     </div>
                 </fieldset>
