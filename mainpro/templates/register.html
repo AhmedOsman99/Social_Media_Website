@@ -8,15 +8,22 @@
     body{
         background-color: #232930;
     }
+    .subcontainer{
+        background-color: #f34719;
+
+    }
 </style>
 {% endblock %}
 {% block content %}
     <div class="container m-auto mt-4    mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card ">
+                <div class="subcontainer card text-white">
                     <div class="card-body p-5">
-                        <h1 class="card-title mb-5">Register</h1>
+                        <div class="text-center">
+                            <h1 class="mb-5">Connect Me</h1>
+                        </div>
+                        <h3 class="card-title mb-/">Register</h3>
                         <form class="row g-3" method="POST" enctype="multipart/form-data">
                             {{data.form.hidden_tag()}}
                             <div class="col-md-4">
@@ -136,12 +143,12 @@
                               </div>
                             </div> -->
                             <div class="col-12">
-                                {{ data.form.submit(class="btn btn-primary mt-2") }}
+                                {{ data.form.submit(class="btn btn-dark mt-2") }}
                             </div>
                           </form>
                           <div class="pt-3">
                             <small class="text-muted">
-                                Already Have An Account ? <a class="ml-2" href="{{ url_for('login') }}">Login</a>
+                                Already Have An Account ? <a class="ml-2 text-white" href="{{ url_for('login') }}">Login</a>
                             </small>
                         </div>
                     </div>
