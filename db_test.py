@@ -83,5 +83,13 @@ def delete_posts():
         print(post)
 
 
+def create_friendship():
+    with app.app_context():
+        new_friendship = Friendship(user_id = 1 , friend_id = 2)
+        new_friendship2 = Friendship(user_id = 2 , friend_id = 1)
+        db.session.add(new_friendship)
+        db.session.add(new_friendship2)
+        db.session.commit()
+
 if __name__ == '__main__':
     globals()[sys.argv[1]]()

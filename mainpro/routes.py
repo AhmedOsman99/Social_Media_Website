@@ -97,44 +97,54 @@ def delete_Post(post_id):
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/edit/<post_id>', methods = ['GET', 'POST'])
 @login_required
-def home(post_id = ""):
 
+def home(post_id = ""):
+    
+    form2 = None
     # edit post
     post_to_edit = None
     if post_id :
         # print("true")
         # post_to_edit = Post.query.filter_by(id == post_id).first()
-        post_to_edit = Post.query.filter_by(id=post_id).first()
+        post_to_edit = db.session.query(
+            Post,
+        )\
+        .filter(Post.id == post_id)\
+        .first()
+
         print("00000000000000000000000")
         print(post_to_edit)
+        print(post_to_edit.title)
+
+
         if post_to_edit :
             print("true")
-            form = PostForm(obj=post_to_edit)
-            print(form)
-            form.populate_obj(post_to_edit)
-            if form.validate_on_submit():
+            form2 = PostForm(obj=post_to_edit)
+            # print(form2)
+            if form2.validate_on_submit():
+                form2.populate_obj(post_to_edit)
                 print("true2")
-                if form.post_image.data :
-                    post_imagex = form.post_image.data
+                if form2.post_image.data :
+                    post_imagex = form2.post_image.data
                     post_image_data = post_imagex.read()
                     post_image_filename = post_imagex.filename
                 else: 
-                    post_image_data = b''
-                    post_image_filename =""
+                    post_image_data = post_to_edit.post_image_data
+                    post_image_filename =  post_to_edit.post_image_filename
 
                 with app.app_context():
-                    form.populate_obj(post_to_edit)
+                    form2.populate_obj(post_to_edit)
                     post_to_edit = Post.query.filter(Post.id == post_id).first()
 
-                    post_to_edit.title = form.title.data
-                    post_to_edit.content = form.content.data
-                    post_to_edit.status = form.status.data
+                    post_to_edit.title = form2.title.data
+                    post_to_edit.content = form2.content.data
+                    post_to_edit.status = form2.status.data
                     post_to_edit.post_image_data = post_image_data
                     post_to_edit.post_image_filename = post_image_filename
                     db.session.commit()
 
-                if form.post_image.data :
-                    file = form.post_image.data # First grab the file
+                if form2.post_image.data :
+                    file = form2.post_image.data # First grab the file
                     filename = secure_filename(file.filename)
                     file.seek(0)
                     file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
@@ -193,6 +203,9 @@ def home(post_id = ""):
     for post in friends_posts:
         posts_id.append(post.id)
 
+    friends_posts = list(filter(lambda post : post.status == 'Public' , friend_posts ))
+    for post in friends_posts:
+        posts_id.append(post.id)
 
     posts_onlyme = db.session.query(
             Post,
@@ -232,7 +245,7 @@ def home(post_id = ""):
         .all()
 
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "form2":form2, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
 
     
 

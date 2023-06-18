@@ -202,7 +202,11 @@
 
 img {
   height: auto;
-  max-width: fit-content;
+  max-width: 600px;
   object-fit: contain;
   display: block;
+}
+
+.bigimage{
+  max-height: 300px;
 }

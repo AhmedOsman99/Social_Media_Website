@@ -109,8 +109,8 @@
 {% for post in data.posts_onlyme %}
 
         <div class=" border border-secondary p-3 shadow-lg  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            
             <div class="m-2 d-flex personal_info" >
-                
                 <div class="m-1 ">
                     <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
                 </div>
@@ -154,9 +154,10 @@
                 </div>
             </div>
             <hr>
+
             <div class="container my-2">
                 <div class="row">
-                {% if post.Post.post_image_filename %}
+                {% if post.Post.post_image_filename and post.Post.content %}
                     <div class="col-md-4 d-flex justify-content-around my-3">
                         <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid">
                     </div>
@@ -164,13 +165,17 @@
                         <h2>{{post.Post.title}}</h2>
                         <p>{{post.Post.content}}</p>
                     </div>
-                    
-
-                {% else %}
+                {% elif post.Post.content %}
                 <div class="col-md-10">
                     <h2>{{post.Post.title}}</h2>
-                    <p class="mx-5">{{post.Post.content}}</p>
+                    <p class="">{{post.Post.content}}</p>
                 </div>
+
+                {% elif post.Post.post_image_filename %}
+                    <div class="d-flex  flex-column align-content-center text-center ">
+                        <h2>{{post.Post.title}}</h2>
+                        <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid object-fit-contain bigimage">
+                    </div>
                 {% endif %}
                 </div>
             </div>
@@ -247,14 +252,6 @@
                         </a>
                         {% endif %}
                         
-                        <!-- <div class="d-flex flex-column justify-content-center m-2 ">
-                            <label class="burger m-2" for="burger{{post.Post.id}}">
-                                <input type="checkbox" id="burger{{post.Post.id}}">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </label>
-                        </div> -->
                     </div>
 
                     
@@ -273,9 +270,10 @@
                 {% endif %}
             </div> -->
 
+
             <div class="container my-2">
                 <div class="row">
-                {% if post.Post.post_image_filename %}
+                {% if post.Post.post_image_filename and post.Post.content %}
                     <div class="col-md-4 d-flex justify-content-around my-3">
                         <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid">
                     </div>
@@ -283,13 +281,17 @@
                         <h2>{{post.Post.title}}</h2>
                         <p>{{post.Post.content}}</p>
                     </div>
-                    
-
-                {% else %}
+                {% elif post.Post.content %}
                 <div class="col-md-10">
                     <h2>{{post.Post.title}}</h2>
-                    <p class="mx-5">{{post.Post.content}}</p>
+                    <p class="">{{post.Post.content}}</p>
                 </div>
+
+                {% elif post.Post.post_image_filename %}
+                    <div class="d-flex  flex-column align-content-center text-center ">
+                        <h2>{{post.Post.title}}</h2>
+                        <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid object-fit-contain bigimage">
+                    </div>
                 {% endif %}
                 </div>
             </div>
@@ -321,16 +323,31 @@
                 </div>
                 <hr>
 
-                <div class="m-2 d-flex post-info flex-column">
-                    <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
-                    <div class=" p-3  d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
-                    {% if post.Post.post_image_filename %}
-                        <div class="d-flex justify-content-around image_container"> 
-                            <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
+
+                <div class="container my-2">
+                    <div class="row">
+                    {% if post.Post.post_image_filename and post.Post.content %}
+                        <div class="col-md-4 d-flex justify-content-around my-3">
+                            <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid">
+                        </div>
+                        <div class="col-md-8">
+                            <h2>{{post.Post.title}}</h2>
+                            <p>{{post.Post.content}}</p>
+                        </div>
+                    {% elif post.Post.content %}
+                    <div class="col-md-10">
+                        <h2>{{post.Post.title}}</h2>
+                        <p class="">{{post.Post.content}}</p>
+                    </div>
+    
+                    {% elif post.Post.post_image_filename %}
+                        <div class="d-flex  flex-column align-content-center text-center ">
+                            <h2>{{post.Post.title}}</h2>
+                            <img src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="Post Image" class="img-fluid object-fit-contain bigimage">
                         </div>
                     {% endif %}
+                    </div>
                 </div>
-
                 
 
                 
@@ -360,23 +377,23 @@
         <!-- edit form -->
         <div class="d-flex flex-column align-content-around border-1" >
             <form action="" method="POST" enctype="multipart/form-data">
-                {{ data.form.hidden_tag() }}
+                {{ data.form2.hidden_tag() }}
                 
                 <!-- title -->
                 <fieldset class = "form-group">
                     <legend class="border-bottom mb4"></legend>
                     <div class="form-group">
-                        {{ data.form.title.label(class = "form-control-label") }}
+                        {{ data.form2.title.label(class = "form-control-label") }}
                         
-                        {% if data.form.title.errors %}
-                            {{ data.form.title(class = "form-control is-invalid") }}
+                        {% if data.form2.title.errors %}
+                            {{ data.form2.title(class = "form-control is-invalid") }}
                             <div class="invalid-feedback">
-                                {% for error in data.form.title.errors %}
+                                {% for error in data.form2.title.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ data.form.title(class = "input_x form-control")  }}
+                            {{ data.form2.title(class = "input_x form-control")  }}
                         {% endif %}
                     </div>
                 </fieldset>
@@ -385,11 +402,11 @@
                 <fieldset class = "form-group">
                     <legend class="border-bottom mb4"></legend>
                     <div class="form-group">
-                        {{ data.form.content.label(class="form-control-label") }}
+                        {{ data.form2.content.label(class="form-control-label") }}
                         {% if data.post_to_edit %}
-                            {{ data.form.content(class="form-control", value=data.post_to_edit.content, id="edit_form_content") }}
+                            {{ data.form2.content(class="form-control", value=data.post_to_edit.content, id="edit_form_content") }}
                         {% else %}
-                            {{ data.form.content(class="form-control", id="edit_form_content") }}
+                            {{ data.form2.content(class="form-control", id="edit_form_content") }}
                         {% endif %}
                     </div>
                 </fieldset>
@@ -398,17 +415,17 @@
                 <fieldset class = "form-group" onchange="">
                     <legend class="border-bottom mb4"></legend>
                     <div class="form-group">
-                        {{ data.form.status.label(class = "form-control-label") }}
+                        {{ data.form2.status.label(class = "form-control-label") }}
                         
-                        {% if data.form.status.errors %}
-                            {{ data.form.status(class = "form-control is-invalid") }}
+                        {% if data.form2.status.errors %}
+                            {{ data.form2.status(class = "form-control is-invalid") }}
                             <div class="invalid-feedback">
-                                {% for error in data.form.status.errors %}
+                                {% for error in data.form2.status.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ data.form.status(class = "form-control ", value= data.post_to_edit.status) }}
+                            {{ data.form2.status(class = "form-control ", value= data.post_to_edit.status) }}
                             
                         {% endif %}
                     </div>
@@ -417,8 +434,8 @@
                 <fieldset class = "form-group">
                     <legend class="border-bottom mb4"></legend>
                     <div class="form-group">
-                        {{ data.form.post_image.label(class = "form-control-label") }}
-                        {{ data.form.post_image(class = "form-control") }}
+                        {{ data.form2.post_image.label(class = "form-control-label") }}
+                        {{ data.form2.post_image(class = "form-control") }}
                     </div>
                 </fieldset>
 
@@ -426,7 +443,7 @@
                 
                 <!-- submit button  -->
                 <div class="d-flex justify-content-around">
-                    {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center") }}
+                    {{ data.form2.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center") }}
                 </div>
                 
             </form>
