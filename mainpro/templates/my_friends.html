@@ -1,0 +1,43 @@
+{% extends 'find_friends.html' %}
+
+{% block friends_card %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% if data.friends %}
+        {% if data.friends|length == 1 %}
+            <h3 class='mb-3'>
+                1 Friend
+            </h3>
+        {% else %}
+            <h3 class='mb-3'>
+                {{ data.friends|length }} Friends
+            </h3>
+        {% endif %}
+        {% for friend in data.friends %}
+        <div class="card my-3 border-black border-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{friend[1].first_name }} {{friend[1].middle_name}} </h5>
+                    <a href="{{ url_for('view_user_profile', user_id = friend[1].id) }}" class="btn btn-info align-content-end">View profile</a>
+                    <a href="{{ url_for('remove_friend', friendID = friend[1].id)}}" class="btn btn-danger align-content-end">Remove friend</a>
+                </div>
+            </div>
+            {% endfor %}
+    {% else %}
+        <div class="card my-3 border-black border-2">
+            <div class="card-body">
+                <h5 class="card-title">You have no friends.
+                    <a href="{{ url_for('find_friends')}}">
+                        Find friends Now!
+                    </a>
+                </h5>
+            </div>
+        </div>
+    {% endif %}
+{% endblock friends_card %}    

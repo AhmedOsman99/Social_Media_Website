@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class='content_form'> 
+
+        <form action="", method="POST" class="w-50 p-3 bg-light mt-5">
+            {{ data.form.hidden_tag() }}
+            <fieldset class='form-group my-3'>
+
+                <div class='form-group my-3'>
+                    {{ data.form.first_name.label(class='form-control-label') }}
+                    
+                    {% if data.form.first_name.errors %}
+                    {{ data.form.first_name(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.first_name.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ data.form.first_name(class='form-control') }}
+                    {% endif %}
+                    
+                </div>
+
+                <div class='form-group my-3'>
+                    {{ data.form.middle_name.label(class='form-control-label') }}
+                    
+                    {% if data.form.middle_name.errors %}
+                    {{ data.form.middle_name(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.middle_name.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ data.form.middle_name(class='form-control') }}
+                    {% endif %}
+                    
+                </div>
+
+                <div class='form-group my-3'>
+                    {{ data.form.last_name.label(class='form-control-label') }}
+                    
+                    {% if data.form.last_name.errors %}
+                    {{ data.form.last_name(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.last_name.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ data.form.last_name(class='form-control') }}
+                    {% endif %}
+                    
+                </div>
+
+                <div class='form-group my-3'>
+                    {{ data.form.birth_date.label(class='form-control-label') }}
+                    
+                    {% if data.form.birth_date.errors %}
+                    {{ data.form.birth_date(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.birth_date.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ data.form.birth_date(class='form-control') }}
+                    {% endif %}
+                    
+                </div>
+
+                <div class='form-group my-3'>
+                    {{ data.form.username.label(class='form-control-label') }}
+                    
+                    {% if data.form.username.errors %}
+                    {{ data.form.username(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.username.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ data.form.username(class='form-control') }}
+                    {% endif %}
+                    
+                </div>
+                
+                <div class='form-group my-3'>
+                    {{ data.form.email.label(class='form-control-label') }}
+                    
+                    {% if data.form.email.errors %}
+                    {{ data.form.email(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.email.errors %}
+                        <span>
+                                    {{e}}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.email(class='form-control') }}
+                    {% endif %}
+                </div>
+                
+                <div class='form-group my-3'>
+                    {{ data.form.password.label(class='form-control-label') }}
+
+                    {% if data.form.password.errors %}
+                    {{ data.form.password(class='form-control is-invalid') }}
+                    <div class='invalid-feedback'>
+                        {% for e in data.form.password.errors %}
+                        <span>
+                            {{e}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ data.form.password(class='form-control') }}
+                    {% endif %}
+                </div>
+                
+                <div class='form-group my-3'>
+                    {{ data.form.conf_password.label(class='form-control-label') }}
+                    
+                    {% if data.form.conf_password.errors %}
+                        {{ data.form.conf_password(class='form-control is-invalid') }}
+                        <div class='invalid-feedback'>
+                            {% for e in data.form.conf_password.errors %}
+                                <span>
+                                    {{e}}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.conf_password(class='form-control') }}
+                    {% endif %}
+                </div>
+                
+                <div class='form-group'>
+                    {{ data.form.submit(class='btn btn-success w-25 mt-5') }}
+                </div>
+
+            </fieldset>
+            <div class="text-center">
+                <label  class='mb-5' for="">
+                    Already has an account? <a href="{{ url_for('login')}}">Login</a>
+                </label>
+            </div>
+        </form>
+        
+        
+    </div>
+{% endblock %}

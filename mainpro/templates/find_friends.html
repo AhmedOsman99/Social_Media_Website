@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+    <div class='content_friends_requests'>
+
+
+        <div class='friends_requests_area bg-light p-5'>
+            {% block friends_card %}
+                <h3 class='mb-3'>
+                Suggestion
+                </h3>
+                {% for user in data.pending_user %}
+                    {% if user != current_user %}
+                        <div class="card my-3 border-black border-2">
+                            <div class="card-body">
+                                <h5 class="card-title">{{user[1].first_name }} {{user[1].middle_name}} </h5>
+                                <p class="card-text">{{user[1].username}}</p>
+                                <a href="{{ url_for('view_user_profile', user_id = user[1].id) }}" class="btn btn-info align-content-end">View profile</a>
+                                <a class="btn btn-secondary align-content-end disabled">{{user[0].status}}</a>
+                                <a href="{{ url_for('cancel_request', friendID = user[1].id) }}" class="btn btn-danger align-content-end">Cancel request</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% for user in data.not_friend_users %}
+                    <div class="card my-3 border-black border-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{user.first_name }} {{user.middle_name}} </h5>
+                            <p class="card-text">{{user.username}}</p>
+                            <a href="{{ url_for('view_user_profile', user_id = user.id) }}" class="btn btn-info align-content-end">View profile</a>
+                            <a href="{{ url_for('send_request', new_friend_id = user.id) }}" class="btn btn-success align-content-end">Add friend</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endblock friends_card %}    
+        </div>
+
+    </div>
+
+{% endblock content %}

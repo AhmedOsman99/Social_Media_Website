@@ -1,0 +1,36 @@
+{% extends 'find_friends.html' %}
+
+{% block friends_card %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h3 class='mb-3'>
+        Friend requests
+    </h3>
+    {% if data.user_requests %}
+        {% for request in data.user_requests %}
+            <div class="card my-3 border-black border-2">
+                <div class="card-body">
+                    <h5 class="card-title ">{{request[1].first_name }} {{request[1].middle_name}} </h5>
+                    <a href="{{ url_for('accept_friend_request', friendID = request[1].id) }}" class="btn btn-success align-content-end">Accept</a>
+                    <a href="{{ url_for('decline_friend_request', friendID = request[1].id)}}" class="btn btn-danger align-content-end">Decline</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card my-3 border-black border-2">
+            <div class="card-body">
+                <h5 class="card-title ">You have no requests</h5>
+               
+            </div>
+        </div>
+    
+    {% endif %}
+
+{% endblock friends_card %}

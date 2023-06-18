@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js" integrity="sha512-3dZ9wIrMMij8rOH7X3kLfXAzwtcHpuYpEgQg1OA4QAob1e81H8ntUQmQm3pBudqIoySO5j0tHN4ENzA6+n2r4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-t4GWSVZO1eC8BM339Xd7Uphw5s17a86tIZIj8qRxhnKub6WoyhnrxeCIMeAqBPgdZGlCcG2PrZjMc+Wr78+5Xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" type="text/css" 
+    href="{{ url_for('static', filename='base.css') }}
+    ">
+
+    <title>Connect Me</title>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg px-5 navbar-dark bg-dark position-fixed w-100 z-1">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Connect Me</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+               
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={{ url_for('home')}}>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">{{current_user.username}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={{ url_for('my_friends')}}>My friends</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={{ url_for('find_friends')}}>Find friends</a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link" style="margin-right: 20px" href={{ url_for('friend_requests')}}>Friend requests</a>
+                        {% if current_user.pendings != 0 %}
+                            <label class='bg-danger text-center'  
+                            style="position: absolute; 
+                            right: 0px; 
+                            top: 0px; 
+                            color: white;
+                            border: 1px solid transparent;
+                            border-radius: 20px;
+                            width: 25px
+                            ">{{current_user.pendings}}</label>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={{ url_for('logout')}}>Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={{ url_for('login')}}>Login</a>
+                    </li>
+
+                {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    {% block content %}
+        <div class='content'>
+            <h1>Welcome to our website</h1>
+        </div>
+    {% endblock content %}
+
+</body>
+</html>
