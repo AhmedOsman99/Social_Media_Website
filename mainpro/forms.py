@@ -119,10 +119,7 @@ class PostForm(FlaskForm):
         )
 
     content = TextAreaField(
-        'Post Content',
-        validators=[
-            DataRequired()
-        ]
+        'Post Content'
         )
 
     status = SelectField(u'Share with', 
