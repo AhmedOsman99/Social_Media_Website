@@ -1,0 +1,207 @@
+.text_limit {
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 7.2rem;
+  }
+
+  /* === removing default button style ===*/
+.button {
+    margin: 0;
+    height: auto;
+    background: transparent;
+    padding: 0;
+    border: none;
+  }
+  
+  /* button styling */
+  .button {
+    --border-right: 6px;
+    --text-stroke-color: rgba(0, 0, 0, 0.6);
+    --animation-color: #000000;
+    --fs-size: 4em;
+    letter-spacing: 3px;
+    text-decoration: none;
+    font-size: var(--fs-size);
+    font-family: "Arial";
+    position: relative;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--text-stroke-color);
+  }
+  /* this is the text, when you hover on button */
+  .hover-text {
+    position: absolute;
+    box-sizing: border-box;
+    content: attr(data-text);
+    color: var(--animation-color);
+    width: 0%;
+    inset: 0;
+    border-right: var(--border-right) solid var(--animation-color);
+    overflow: hidden;
+    transition: 0.5s;
+    -webkit-text-stroke: 1px var(--animation-color);
+  }
+  /* hover */
+  .button:hover .hover-text {
+    width: 100%;
+    filter: drop-shadow(0 0 23px var(--animation-color))
+  }
+
+
+
+  
+  .burger {
+    position: relative;
+    width: 30px;
+    height: 20px;
+    background: transparent;
+    cursor: pointer;
+    display: block;
+  }
+  
+  .burger input {
+    display: none;
+  }
+  
+  .burger span {
+    display: block;
+    position: absolute;
+    height:3px;
+    width: 100%;
+    background: black;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+  }
+  
+  .burger span:nth-of-type(1) {
+    top: 0px;
+    transform-origin: left center;
+  }
+  
+  .burger span:nth-of-type(2) {
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+  }
+  
+  .burger span:nth-of-type(3) {
+    top: 100%;
+    transform-origin: left center;
+    transform: translateY(-100%);
+  }
+  
+  .burger input:checked ~ span:nth-of-type(1) {
+    transform: rotate(45deg);
+    top: 0px;
+    left: 5px;
+  }
+  
+  .burger input:checked ~ span:nth-of-type(2) {
+    width: 0%;
+    opacity: 0;
+  }
+  
+  .burger input:checked ~ span:nth-of-type(3) {
+    transform: rotate(-45deg);
+    top: 23px;
+    left: 5px;
+  }
+
+
+
+  .addbutton {
+    position: fixed;
+    top: 85%;
+    left: 85%;
+    cursor: pointer;
+    /* width: 100px; */
+}
+
+.addbutton:hover 
+    {
+        transform: translateY(-6px) scale(1.3) ;
+        transition: transform 0.2s;
+        animation-name: rotate;
+        animation-duration: 1.5s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        
+    }
+
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg) scale(1) ;
+          }
+          50% {
+            transform: rotate(180deg) scale(1.5) ;
+          }
+          100% {
+            transform: rotate(360deg) scale(1)  ;
+          }
+      }
+
+
+
+.edit_post_container {
+  width: 80%;
+  height: 60%;
+  position: fixed;
+  top: 20vh;
+  left: 10%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 1rem;
+  border: 2px solid black;
+  border-radius: 3rem;
+  transition: all 0.5s ease;
+  /* overflow-y: scroll; */
+  z-index: 1;
+}
+
+.closesign {
+  /* position: absolute; */
+  margin-left: auto;
+  padding-right: 2rem;
+  font-size: x-large;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+
+.edit_post_container2 {
+  width: 80%;
+  height: 60%;
+  position: fixed;
+  top: 20vh;
+  left: 10%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 1rem;
+  border: 2px solid black;
+  border-radius: 3rem;
+  transition: all 0.5s ease;
+  /* overflow-y: scroll; */
+  z-index: 1;
+}
+
+.image_container {
+  max-height: 400px;
+  overflow: hidden;
+
+}
+
+img {
+  height: auto;
+  max-width: fit-content;
+  object-fit: contain;
+  display: block;
+}
