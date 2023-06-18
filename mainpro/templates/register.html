@@ -1,0 +1,269 @@
+<!-- social_media/templates/register.html -->
+{% extends 'base.html' %}
+
+{% block navbar %}
+{% endblock %}
+{% block style %} 
+<style>
+    body{
+        background-color: #232930;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container m-auto mt-4    mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="card-body p-5">
+                        <h1 class="card-title mb-5">Register</h1>
+                        <form class="row g-3" method="POST" enctype="multipart/form-data">
+                            {{data.form.hidden_tag()}}
+                            <div class="col-md-4">
+                                {{ data.form.first_name.label(class="form-label") }}
+                                <!-- {{ data.form.first_name(class='form-control') }} -->
+                                {% if data.form.first_name.errors %}
+                                {{ data.form.first_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.first_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.first_name(class="form-control") }}
+                                {% endif %}
+
+                            </div>
+                            <div class="col-md-4">
+                                {{ data.form.middle_name.label(class="form-label") }}
+                                {% if data.form.middle_name.errors %}
+                                {{ data.form.middle_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.middle_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.middle_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-4">
+                                {{ data.form.last_name.label(class="form-label") }}
+                                {% if data.form.last_name.errors %}
+                                {{ data.form.last_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.last_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.last_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {{ data.form.username.label(class="form-label") }}
+                                {% if data.form.username.errors %}
+                                {{ data.form.username(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.username.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.username(class="form-control") }}
+                                {% endif %}
+                                
+                            </div>
+                            <div class="col-md-6">
+                                {{ data.form.birth_date.label(class="form-label") }}
+                                {{ data.form.birth_date(class='form-control') }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ data.form.profile_image.label(class="form-label") }}
+                                {{ data.form.profile_image(class='form-control') }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ data.form.email.label(class="form-label") }}
+                                {% if data.form.email.errors %}
+                                {{ data.form.email(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.email(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ data.form.password.label(class="form-label") }}
+                                {% if data.form.password.errors %}
+                                {{ data.form.password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.password(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ data.form.confirm_password.label(class="form-label") }}
+                                {% if data.form.confirm_password.errors %}
+                                {{ data.form.confirm_password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.confirm_password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.confirm_password(class="form-control") }}
+                                {% endif %}
+                            </div>
+
+<!-- 
+                            <div class="col-md-2">
+                              <label for="inputZip" class="form-label">Zip</label>
+                              <input type="text" class="form-control" id="inputZip">
+                            </div>
+                            <div class="col-12">
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                <label class="form-check-label" for="gridCheck">
+                                  Check me out
+                                </label>
+                              </div>
+                            </div> -->
+                            <div class="col-12">
+                                {{ data.form.submit(class="btn btn-primary mt-2") }}
+                            </div>
+                          </form>
+                          <div class="pt-3">
+                            <small class="text-muted">
+                                Already Have An Account ? <a class="ml-2" href="{{ url_for('login') }}">Login</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+<!-- social_media/templates/register.html -->
+<!-- 
+
+
+    <div class="container m-auto mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="card-body p-5">
+                        <h1 class="card-title">Register</h1>
+                        <form class="row g-3" method="POST" >
+                            {{data.form.hidden_tag()}}
+                            <div class="col-md-4">
+                                {{ data.form.first_name.label(class="form-label") }}
+                                {% if data.form.first_name.errors %}
+                                {{ data.form.first_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.first_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.first_name(class="form-control") }}
+                                {% endif %}
+                                
+                            </div>
+                            <div class="col-md-4">
+                                {{ data.form.middle_name.label(class="form-label") }}
+                                {% if data.form.middle_name.errors %}
+                                {{ data.form.middle_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.middle_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.middle_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-4">
+                                {{ data.form.last_name.label(class="form-label") }}
+                                {% if data.form.last_name.errors %}
+                                {{ data.form.last_name(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.last_name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.last_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-12">
+                                {{ data.form.birth_date.label(class="form-label") }}
+                                {{ data.form.birth_date(class='form-control') }}
+                            </div>
+                            <div class="col-12">
+                                {{ data.form.username.label(class="form-label") }}
+                                {% if data.form.username.errors %}
+                                {{ data.form.username(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.username.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.username(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-12">
+                                {{ data.form.email.label(class="form-label") }}
+                                {% if data.form.email.errors %}
+                                {{ data.form.email(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in data.form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ data.form.email(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                                {{ data.form.password.label(class="form-label") }}
+                                {{ data.form.password(class='form-control') }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ data.form.confirm_password.label(class="form-label") }}
+                                {{ data.form.confirm_password(class='form-control') }}
+                            </div>
+
+<!-- 
+                            <div class="col-md-2">
+                              <label for="inputZip" class="form-label">Zip</label>
+                              <input type="text" class="form-control" id="inputZip">
+                            </div>
+                            <div class="col-12">
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck"> -->
+                                <!-- <label class="form-check-label" for="gridCheck">
+                                  Check me out
+                                </label>
+                              </div>
+                            </div> --> -->
+                            <!-- <div class="col-12"> -->
+                                <!-- {{ data.form.submit(class="btn btn-primary mt-2") }} -->
+                            <!-- </div> -->
+                          <!-- </form> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
+
