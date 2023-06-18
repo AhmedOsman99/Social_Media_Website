@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, Blueprint, send_from_directory
 from mainpro import  app, bcrypt, db
 from mainpro.models import User, Post, Friendship
-from mainpro.forms import PostForm, RegistrationForm, LoginForm
+from mainpro.forms import PostForm, RegistrationForm, LoginForm, EditForm
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 import os
@@ -48,8 +48,8 @@ def register():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     endpoint_title = "Login Page"
     form = LoginForm()
     if form.validate_on_submit():
@@ -251,4 +251,115 @@ def profile():
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
         endpoint_title = 'profile'
         
-        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age  })
+        my_posts = Post.query.filter_by(user_id=current_user.id).all()
+    
+        
+        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'current_user':current_user, 'age': age, 'my_posts':my_posts  })
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required  # Ensure the user is logged in
+def edit_profile():
+    endpoint_title = "Edit Profile"
+    form = EditForm(obj=current_user)
+
+    print("v1111111111111111111111111111111")
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        form.populate_obj(current_user)
+        print("valid000000000000000000000000")
+        if form.profile_image.data:
+            profile_imagex = form.profile_image.data
+            profile_image_data = profile_imagex.read()
+            profile_image_filename = profile_imagex.filename
+        else: 
+            profile_image_data = current_user.profile_image_data
+            profile_image_filename =  current_user.profile_image_filename
+
+
+        with app.app_context():
+            form.populate_obj(current_user)
+            current_user.first_name = form.first_name.data
+            current_user.middle_name = form.middle_name.data
+            current_user.last_name = form.last_name.data
+            current_user.birth_date = form.birth_date.data
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            current_user.profile_image_data = profile_image_data
+            current_user.profile_image_filename = profile_image_filename
+            # curre.current_profile_image.data = current_user.profile_image_filename
+            db.session.commit()
+
+        if form.profile_image.data:
+            # Check if a new profile image was uploaded
+            file = form.profile_image.data # First grab the file
+            filename = secure_filename(file.filename)
+            file.seek(0)
+            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
+
+            # db.session.commit()
+        flash("Your profile has been updated successfully.", "success")
+        return redirect(url_for('profile'))
+
+    # Pre-fill the form with the current user's information
+    # form.first_name.data = current_user.first_name
+    # form.middle_name.data = current_user.middle_name
+    # form.last_name.data = current_user.last_name
+    # form.birth_date.data = current_user.birth_date
+    # form.username.data = current_user.username
+    # form.email.data = current_user.email
+
+    return render_template('edit_profile.html', data={'title': endpoint_title, 'form': form})
+
+
+def test():
+    if post_id :
+            # print("true")
+            # post_to_edit = Post.query.filter_by(id == post_id).first()
+            post_to_edit = db.session.query(
+                Post,
+            )\
+            .filter(Post.id == post_id)\
+            .first()
+
+            print("00000000000000000000000")
+            print(post_to_edit)
+            print(post_to_edit.title)
+
+
+            if post_to_edit :
+                print("true")
+                form2 = PostForm(obj=post_to_edit)
+                # print(form2)
+                if form2.validate_on_submit():
+                    form2.populate_obj(post_to_edit)
+                    print("true2")
+                    if form2.post_image.data :
+                        post_imagex = form2.post_image.data
+                        post_image_data = post_imagex.read()
+                        post_image_filename = post_imagex.filename
+                    else: 
+                        post_image_data = post_to_edit.post_image_data
+                        post_image_filename =  post_to_edit.post_image_filename
+
+                    with app.app_context():
+                        form2.populate_obj(post_to_edit)
+                        post_to_edit = Post.query.filter(Post.id == post_id).first()
+                        post_to_edit.title = form2.title.data
+                        post_to_edit.content = form2.content.data
+                        post_to_edit.status = form2.status.data
+                        post_to_edit.post_image_data = post_image_data
+                        post_to_edit.post_image_filename = post_image_filename
+                        db.session.commit()
+
+                    if form2.post_image.data :
+                        file = form2.post_image.data # First grab the file
+                        filename = secure_filename(file.filename)
+                        file.seek(0)
+                        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
+
+                        
+                    flash("Post updated Successful", "success")
+                    return redirect(url_for('home'))
+            else:
+                return "post doesn't exist"
