@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- title -->
+<div class="d-flex w-100 justify-content-around m-5 ">
+    <button data-text="Awesome" class="button">
+        <span class="actual-text">&nbsp;CONECT&nbsp;</span>
+        <span class="hover-text" aria-hidden="true">&nbsp;CONECT&nbsp;</span>
+    </button>
+</div>
+
+<div class="d-flex justify-content-around"><h1>Add Post</h1></div>
+
+<!-- add post form -->
+    <div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{ data.form.hidden_tag() }}
+            
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.title.label(class = "form-control-label") }}
+                    
+                    {% if data.form.title.errors %}
+                        {{ data.form.title(class = "form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in data.form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.title(class = " input_x form-control") }}
+                        
+                    {% endif %}
+                </div>
+            </fieldset>
+            
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.content.label(class = "form-control-label") }}
+                    {{ data.form.content(class = "form-control") }}
+                </div>
+            </fieldset>
+
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.status.label(class = "form-control-label") }}
+                    
+                    {% if data.form.status.errors %}
+                        {{ data.form.status(class = "form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in data.form.status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.status(class = "form-control") }}
+                        
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.post_image.label(class = "form-control-label") }}
+                    {{ data.form.post_image(class = "form-control") }}
+                </div>
+            </fieldset>
+            
+            <div class="d-flex justify-content-around">
+                {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center w-50") }}
+            </div>
+            
+        </form>
+    </div>
+
+
+<div class="d-flex justify-content-around m-3"><h1>Posts</h1></div>
+
+<!-- choose which posts you want to see -->
+<div class="d-flex justify-content-around ">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="publicid" value="option1" checked onchange="checkRadio()" >
+        <label class="form-check-label" for="exampleRadios1">
+            All Posts
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="friends_onlyid" value="option2" onchange="checkRadio()">
+        <label class="form-check-label" for="exampleRadios2">
+            Friends Posts
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="only_meid" value="option3" onchange="checkRadio()">
+        <label class="form-check-label" for="exampleRadios3">
+            My Posts
+        </label>
+    </div>
+</div>
+
+
+<!-- user posts only -->
+<div class="only_me_posts_container d-none" id="only_me_posts_container">
+{% for post in data.posts_onlyme %}
+        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            
+            <div class=" m-2 d-flex personal_info" >
+                
+                <div class="m-1 ">
+                    <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+
+                    <div class="text-start d-flex flex-column justify-content-center">
+                        <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">
+                            {{post.User.first_name}} {{post.User.last_name}}
+                        </div>
+                        <div>
+                            <a class=" text-dark" href="{{ url_for('profile') }}">
+                                <small>
+                                    {{post.User.username}}
+                                </small>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- <div class="w-100"></div> -->
+                    
+                    <div class="d-flex align-content-around" >
+                        <a class="text-dark d-flex flex-column justify-content-center m-2" href="{{ url_for('home' , post_id=post.Post.id) }}" onclick="openEditForm({{post.Post.id}})">
+                            <div class="d-flex flex-column justify-content-center m-2" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </div>
+                        </a>
+
+                        <a class="text-dark d-flex flex-column justify-content-center m-2" href="{{ url_for('delete_Post' , post_id=post.Post.id) }}">
+                            <div class="d-flex flex-column justify-content-center m-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+            <hr>
+            <div class="m-2 d-flex post-info flex-column">
+                <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
+                <div class=" p-3  d-flex "><div>{{post.Post.content}}</div></div>
+                {% if post.Post.post_image_filename %}
+                    <div class="d-flex justify-content-around image_container"> 
+                        <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
+                    </div>
+                {% endif %}
+            </div>
+            
+        </div>
+{% endfor %}
+</div>
+
+<!-- all posts -->
+<div class="public_posts_container" id="public_posts_container">
+{% for post in data.posts_public %}
+
+        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            <div class=" m-2 d-flex personal_info" >
+                <div class="m-1 ">
+                    <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="pp" srcset="">
+                    <!-- <img  class="rounded-5" width="50px" src="../static/profile_images/{{ post.User.profile_image_filename }}" alt="pp2" srcset="">
+                    <img class="rounded-5" width="50px" src="{{ url_for('static', filename='../../static/profile_images/' + post.User.profile_image_filename) }}" alt="pp3" srcset=""> -->
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                    
+                    <div class="text-start d-flex flex-column justify-content-center">
+                        <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">
+                            {{post.User.first_name}} {{post.User.last_name}}
+                        </div>
+                        <div>
+                            <a class=" text-dark" href="{{ url_for('profile') }}">
+                                <small>
+                                    {{post.User.username}}
+                                </small>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- <div class="w-100"></div> -->
+                    
+                    <div class="d-flex align-content-around">
+                        
+                        {% if post.Post.user_id != data.user.id and post.Post.id not in data.friends_only_posts_ids %}
+                        <div class=" m-2 d-flex flex-column justify-content-center  ms-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+
+                        <!-- <divposts_id class=" m-2 d-flex flex-column justify-content-center  ms-0 dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                button
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">edit </a></li>
+                                <li><a class="dropdown-item" href="#">delete</a></li>
+                            </ul>
+                        </div> -->
+
+                        {% if post.Post.user_id == data.user.id %}
+                        <a class="text-dark d-flex flex-column justify-content-center m-2" onclick="openEditForm({{post.Post.content}})" href="{{ url_for('home' , post_id=post.Post.id) }}" >
+                            <div class="d-flex flex-column justify-content-center m-2" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </div>
+                        </a>
+
+                        <a class="text-dark d-flex flex-column justify-content-center m-2" href="{{ url_for('delete_Post' , post_id=post.Post.id) }}">
+                            <div class="d-flex flex-column justify-content-center m-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </div>
+                        </a>
+                        {% endif %}
+                        
+                        <!-- <div class="d-flex flex-column justify-content-center m-2 ">
+                            <label class="burger m-2" for="burger{{post.Post.id}}">
+                                <input type="checkbox" id="burger{{post.Post.id}}">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </label>
+                        </div> -->
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            <hr>
+            
+            <div class="m-2 d-flex post-info flex-column">
+                <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
+                <div class=" p-3  d-flex justify-content-center h-auto w-100"><div class=" h-auto w-100">{{post.Post.content}}</div></div>
+                {% if post.Post.post_image_filename %}
+                <div class="d-flex justify-content-around image_container"> 
+                    <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
+                </div>
+                {% endif %}
+            </div>
+            
+        </div>
+{% endfor %}
+</div>
+
+<!-- friends only posts -->
+<div class="friends_only_post_container d-none" id="friends_only_post_container">
+    {% for post in data.friends_only_posts %}
+    
+            <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+                
+                <div class=" m-2 d-flex personal_info" >
+                    
+                    <div class="m-1 ">
+                        <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
+                    </div>
+    
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="text-start d-flex flex-column justify-content-center">
+                            <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
+                            <div>
+                                <a class=" text-dark" href="{{ url_for('profile') }}"><small>{{post.User.username}}</small></div></a>
+                        </div>
+                        <!-- <div class="w-100"></div> -->
+                    </div>
+                </div>
+                <hr>
+                <div class="m-2 d-flex post-info flex-column">
+                    <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
+                    <div class=" p-3  d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
+                    {% if post.Post.post_image_filename %}
+                        <div class="d-flex justify-content-around image_container"> 
+                            <img class="" src="{{ '../static/profile_images/' + post.Post.post_image_filename }}" alt="">
+                        </div>
+                    {% endif %}
+                </div>
+                
+            </div>
+    {% endfor %}
+</div>
+
+
+<!-- edit window -->
+{% if data.post_to_edit %}
+    <div class="edit_post_container" id="edit_post_container_id">
+
+        <!-- close sign -->
+        <a class="text-dark closesign" href="{{ url_for('home') }}"  onclick="closetab()">
+            <div  >
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square-fill" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                </svg>
+            </div>
+        </a>
+
+        <!-- title -->
+        <div class="d-flex justify-content-around"> 
+            <h1>Edit Post</h1>
+        </div>
+
+        <!-- edit form -->
+        <div class="d-flex flex-column align-content-around border-1" >
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{ data.form.hidden_tag() }}
+                
+                <!-- title -->
+                <fieldset class = "form-group">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.title.label(class = "form-control-label") }}
+                        
+                        {% if data.form.title.errors %}
+                            {{ data.form.title(class = "form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in data.form.title.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ data.form.title(class = "input_x form-control", value= data.post_to_edit.title)  }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                
+                <!-- content -->
+                <fieldset class = "form-group">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.content.label(class="form-control-label") }}
+                        {% if data.post_to_edit %}
+                            {{ data.form.content(class="form-control", value=data.post_to_edit.content, id="edit_form_content") }}
+                        {% else %}
+                            {{ data.form.content(class="form-control", id="edit_form_content") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <!-- share with status -->
+                <fieldset class = "form-group" onchange="">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.status.label(class = "form-control-label") }}
+                        
+                        {% if data.form.status.errors %}
+                            {{ data.form.status(class = "form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in data.form.status.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ data.form.status(class = "form-control ", value= data.post_to_edit.status) }}
+                            
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <fieldset class = "form-group">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.post_image.label(class = "form-control-label") }}
+                        {{ data.form.post_image(class = "form-control") }}
+                    </div>
+                </fieldset>
+
+     
+                
+                <!-- submit button  -->
+                <div class="d-flex justify-content-around">
+                    {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center") }}
+                </div>
+                
+            </form>
+        </div>
+
+</div>
+{% endif %}
+
+<!-- add post icon -->
+<div class="addbutton" onclick="scrollToTop()" >
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+    </svg>
+</div>
+
+<script src="{{ url_for('static', filename='JS/home.js' ) }}"></script>
+
+{% endblock content %}
