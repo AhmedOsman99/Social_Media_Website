@@ -97,38 +97,63 @@ def delete_Post(post_id):
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/edit/<post_id>', methods = ['GET', 'POST'])
 @login_required
+
 def home(post_id = ""):
-
-    print("home")
+    
+    form2 = None
     # edit post
-    post_to_edit = ''
+    post_to_edit = None
     if post_id :
-        print("true")
-        post_to_edit = Post.query.filter(Post.id == post_id).first()
+        # print("true")
+        # post_to_edit = Post.query.filter_by(id == post_id).first()
+        post_to_edit = db.session.query(
+            Post,
+        )\
+        .filter(Post.id == post_id)\
+        .first()
 
-        form = PostForm(obj=post_to_edit)
-        
-        if form.validate_on_submit():
-            with app.app_context():
-                form.populate_obj(post_to_edit)
-                post_to_edit = Post.query.filter(Post.id == post_id).first()
-                post_image = form.post_image.data
+        print("00000000000000000000000")
+        print(post_to_edit)
+        print(post_to_edit.title)
 
-                post_to_edit.title = form.title.data
-                post_to_edit.content = form.content.data
-                post_to_edit.status = form.status.data
-                post_to_edit.post_image_filename = post_image.filename
-                db.session.commit()
 
-            file = form.post_image.data # First grab the file
-            filename = secure_filename(file.filename)
-            file.seek(0)
-            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
+        if post_to_edit :
+            print("true")
+            form2 = PostForm(obj=post_to_edit)
+            # print(form2)
+            if form2.validate_on_submit():
+                form2.populate_obj(post_to_edit)
+                print("true2")
+                if form2.post_image.data :
+                    post_imagex = form2.post_image.data
+                    post_image_data = post_imagex.read()
+                    post_image_filename = post_imagex.filename
+                else: 
+                    post_image_data = post_to_edit.post_image_data
+                    post_image_filename =  post_to_edit.post_image_filename
 
-                
-            flash("Post updated Successful", "success")
-            return redirect(url_for('home'))
+                with app.app_context():
+                    form2.populate_obj(post_to_edit)
+                    post_to_edit = Post.query.filter(Post.id == post_id).first()
 
+                    post_to_edit.title = form2.title.data
+                    post_to_edit.content = form2.content.data
+                    post_to_edit.status = form2.status.data
+                    post_to_edit.post_image_data = post_image_data
+                    post_to_edit.post_image_filename = post_image_filename
+                    db.session.commit()
+
+                if form2.post_image.data :
+                    file = form2.post_image.data # First grab the file
+                    filename = secure_filename(file.filename)
+                    file.seek(0)
+                    file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
+
+                    
+                flash("Post updated Successful", "success")
+                return redirect(url_for('home'))
+        else:
+            return "post doesn't exist"
 
     # add post
     form = PostForm()
@@ -136,6 +161,7 @@ def home(post_id = ""):
         print("valid")
         with app.app_context():
 
+            # checking if there is an image uploaded
             if form.post_image.data :
                 post_imagex = form.post_image.data
                 post_image_data = post_imagex.read()
@@ -143,11 +169,6 @@ def home(post_id = ""):
             else: 
                 post_image_data = b''
                 post_image_filename =""
-
-            # profile_image_data = post_image.read()
-            # print("----------------------------------------------------")
-            # print (post_imagex)
-            # print (post_imagex)
 
             new_post = Post(title=form.title.data,
                             content=form.content.data,
@@ -159,6 +180,7 @@ def home(post_id = ""):
             db.session.add(new_post)
             db.session.commit()
         
+        # upload the image if uloaded 
         if form.post_image.data :
             file = form.post_image.data # First grab the file
             filename = secure_filename(file.filename)
@@ -172,23 +194,18 @@ def home(post_id = ""):
     friend_posts = []
     friendships = Friendship.query.filter((Friendship.user_id == current_user.id)).all()
     for friendship in friendships:
-        # friend_id = friendship.friend_id if friendship.user_id == user_id else friendship.user_id
         friend_posts += User.query.get(friendship.friend_id).posts
+        # friend_id = friendship.friend_id if friendship.user_id == user_id else friendship.user_id
 
-    # print('00000000000000000000000000000000000')
-
+    # Getting posts' ids for my friends 
     friends_posts  = list(filter(lambda post : post.status == 'Friends_only' , friend_posts ))
-    
     posts_id = []
-
     for post in friends_posts:
         posts_id.append(post.id)
 
-    # print(posts_id)
-    # print(friends_posts)
-    # for post in friend_posts:
-    #     print(post.status)
-    # print(friend_posts)
+    friends_posts = list(filter(lambda post : post.status == 'Public' , friend_posts ))
+    for post in friends_posts:
+        posts_id.append(post.id)
 
     posts_onlyme = db.session.query(
             Post,
@@ -228,7 +245,7 @@ def home(post_id = ""):
         .all()
 
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "form2":form2, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
 
     
 
@@ -250,6 +267,8 @@ def profile():
         born = current_user.birth_date
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
         endpoint_title = 'profile'
+
+        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age  })
         
         my_posts = Post.query.filter_by(user_id=current_user.id).all()
     
