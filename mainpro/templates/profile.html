@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="profile pb-4">
+        <div class="profile-picture">
+            <img src="{{ url_for('static', filename='/profile_images/' + current_user.profile_image_filename) }}" alt="Profile Picture">
+
+        </div>
+        <div class="profile-info">
+            <h2 class="full-name pb-2">{{data.current_user.first_name}} {{data.current_user.middle_name}} {{data.current_user.last_name}}</h2>
+            <p class="username">@{{data.current_user.username}}</p>
+            
+            <p>{{ data.current_user.birth_date.strftime('%B %d, %Y') }}</p>
+            <p class="username">Friends {{data.current_user.no_of_friends}}</p>
+        </div>
+        <button class="btn btn-dark">
+            <a class="text-decoration-none text-white" href="{{ url_for('edit_profile') }}">Edit Profile</a>
+        </button>
+        
+    </div>
+
+    <h3>Posts</h3>
+
+    {% if data.my_posts %}
+        <div class="post-container">
+            {% for post in data.my_posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <img src="{{ url_for('static', filename='profile_images/' + post.author.profile_image_filename) }}" alt="Author Profile Picture">
+                        <div class="post-author">
+                            <h4>{{ post.author.username }}</h4>
+                            <p>{{ post.date.strftime('%B %d, %Y') }}</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>{{ post.content }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No posts to display.</p>
+    {% endif %}
+</div>
+{% endblock %}
