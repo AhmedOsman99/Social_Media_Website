@@ -3,17 +3,14 @@
 
 {% block content %}
 
-<!-- title -->
-<div class="d-flex w-100 justify-content-around m-5 ">
-    <button data-text="Awesome" class="button">
-        <span class="actual-text">&nbsp;CONECT&nbsp;</span>
-        <span class="hover-text" aria-hidden="true">&nbsp;CONECT&nbsp;</span>
-    </button>
-</div>
+<div class='container content_home text-dark w-50'>
 
+<!-- title -->
+   
 
 <!-- add post form -->
-    <div  class="">
+    <div  style="margin-top:100px">
+        
         <form action="" method="POST" enctype="multipart/form-data">
             {{ data.form.hidden_tag() }}
             <div class="d-flex justify-content-around"><h1>Add Post</h1></div>
@@ -106,7 +103,7 @@
 
 
 <!-- user posts only -->
-<div class="only_me_posts_container d-none" id="only_me_posts_container">
+<div class="only_me_posts_container d-none" style="margin-bottom: 70px" id="only_me_posts_container">
 {% for post in data.posts_onlyme %}
 
         <div class=" border border-secondary p-3 shadow-lg  containe post_container m-5 d-flex flex-column justify-content-around  border" >
@@ -123,7 +120,7 @@
                             {{post.User.first_name}} {{post.User.last_name}}
                         </div>
                         <div>
-                            <a class=" text-dark" href="{{ url_for('profile') }}">
+                            <a class=" text-dark" href="{{ url_for('profile', userID = post.User.id) }}">
                                 <small>
                                     {{post.User.username}}
                                 </small>
@@ -186,7 +183,7 @@
 </div>
 
 <!-- all posts -->
-<div class="public_posts_container" id="public_posts_container">
+<div class="public_posts_container" style="margin-bottom: 70px" id="public_posts_container">
 {% for post in data.posts_public %}
 
         <div class="border border-secondary p-3 shadow-lg  containe post_container m-5 d-flex flex-column justify-content-around  border" >
@@ -204,7 +201,7 @@
                             {{post.User.first_name}} {{post.User.last_name}}
                         </div>
                         <div>
-                            <a class=" text-dark" href="{{ url_for('profile') }}">
+                            <a class=" text-dark" href="{{ url_for('profile', userID = post.User.id) }}">
                                 <small>
                                     {{post.User.username}}
                                 </small>
@@ -215,14 +212,7 @@
                     
                     <div class="d-flex align-content-around">
                         
-                        {% if post.Post.user_id != data.user.id and post.Post.id not in data.friends_only_posts_ids %}
-                        <div class=" m-2 d-flex flex-column justify-content-center  ms-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
-                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
-                            </svg>
-                        </div>
-                        {% endif %}
+
 
                         <!-- <divposts_id class=" m-2 d-flex flex-column justify-content-center  ms-0 dropdown">
                             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -302,7 +292,7 @@
 </div>
 
 <!-- friends only posts -->
-<div class="friends_only_post_container d-none" id="friends_only_post_container">
+<div class="friends_only_post_container d-none" style="margin-bottom: 70px" id="friends_only_post_container">
     {% for post in data.friends_only_posts %}
     
             <div class="border border-secondary p-3 shadow-lg containe post_container m-5 d-flex flex-column justify-content-around  border" >
@@ -317,7 +307,7 @@
                         <div class="text-start d-flex flex-column justify-content-center">
                             <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
                             <div>
-                                <a class=" text-dark" href="{{ url_for('profile') }}"><small>{{post.User.username}}</small></div></a>
+                                <a class=" text-dark" href="{{ url_for('profile', userID = post.User.id) }}"><small>{{post.User.username}}</small></div></a>
                         </div>
                         <!-- <div class="w-100"></div> -->
                     </div>
@@ -461,6 +451,7 @@
 </div>
 
 <script src="{{ url_for('static', filename='JS/home.js' ) }}"></script>
+</div>
 
 {% endblock content %}
->>>>>>> b0eb75f43086f5942967d0b556b9cf5af4b17690
+

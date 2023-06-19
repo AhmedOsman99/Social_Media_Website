@@ -7,7 +7,7 @@
     <div class='content_friends_requests'>
 
 
-        <div class='friends_requests_area bg-light p-5'>
+        <div class='friends_requests_area bg-body-secondary p-5'>
             {% block friends_card %}
                 <h3 class='mb-3'>
                 Suggestion
@@ -16,6 +16,9 @@
                     {% if user != current_user %}
                         <div class="card my-3 border-black border-2">
                             <div class="card-body">
+                                {% if user.post_image_filename %}
+                                    <img src="{{ '../static/profile_images/' + user.post_image_filename }}" alt="Post Image" class="img-fluid object-fit-contain bigimage">
+                                {% endif %}
                                 <h5 class="card-title">{{user[1].first_name }} {{user[1].middle_name}} </h5>
                                 <p class="card-text">{{user[1].username}}</p>
                                 <a href="{{ url_for('view_user_profile', user_id = user[1].id) }}" class="btn btn-info align-content-end">View profile</a>

@@ -21,6 +21,8 @@ def register():
         with app.app_context():
             profile_image=form.profile_image.data
             hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            profile_image_data = ""
+            profile_image_filename = ""
             new_user = User(
                 first_name=form.first_name.data,
                 middle_name=form.middle_name.data,
@@ -34,6 +36,8 @@ def register():
                 email=form.email.data,
                 password=hashed_pw
             )
+            print(profile_image_data)
+            print(profile_image_filename)
             db.session.add(new_user)
             db.session.commit()
 
@@ -51,7 +55,7 @@ def register():
 
 @app.route('/')
 def main():
-    return render_template('base.html')
+    return render_template('base.html', data={})
 
 
 
@@ -69,7 +73,7 @@ def login():
             if next_page:
                 return redirect(url_for(next_page))
             else:
-                return redirect(url_for('home'))
+                return redirect('home')
         else:
             flash("Login Unsuccessful. Please check email and password.", "danger")
     return render_template('login.html', data={'title': endpoint_title, 'form': form})
@@ -79,7 +83,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('main'))
 
 
 Navbar = ['home', 'profile', "friends" , 'logout']
@@ -102,11 +106,10 @@ def delete_Post(post_id):
     
 
 # home page & add post & edit post
-@app.route('/home', methods = ['GET', 'POST'])
 @app.route('/', methods = ['GET', 'POST'])
+@app.route('/home', methods = ['GET', 'POST'])
 @app.route('/edit/<post_id>', methods = ['GET', 'POST'])
 @login_required
-
 def home(post_id = ""):
     
     form2 = None
@@ -221,11 +224,6 @@ def home(post_id = ""):
         .order_by(Post.date.desc())\
         .all()
     
-    # print('--------------------------------')
-    # print(posts_onlyme)
-    # posts_friends = db.session.query(
-    #     Post,
-
     friendsandI_posts = db.session.query(
             Post,
             User
@@ -235,11 +233,6 @@ def home(post_id = ""):
         .order_by(Post.date.desc())\
         .all()
     
-    # print('--------------------------------')
-    # for post in friendsandI_posts:
-    #     print(post.Post.id)
-    # print(friendsandI_posts[2].user_id)
-
     posts_public = db.session.query(
             Post,
             User
@@ -263,9 +256,9 @@ def about():
 
 
 
-@app.route('/profile')
+@app.route('/profile/<userID>')
 @login_required
-def profile():
+def profile(userID):
     # image = current_user.image.decode('utf-8')
     # print(current_user.image)
     today = date.today()
@@ -274,9 +267,30 @@ def profile():
     endpoint_title = 'profile'
 
     
-    my_posts = Post.query.filter_by(user_id=current_user.id).all()
-    return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age,
-    'my_posts': my_posts })
+    my_posts = Post.query.filter_by(user_id=userID).all()
+    state = ""
+    user = ""
+    user = User.query.filter_by(id=userID).first()
+    # print('test')
+    # with app.app_context():
+    #     if userID == current_user.id:
+    #         user = current_user
+    #     else:
+    #         check_if_friend = db.session.query(Friendship.friend_id).filter(Friendship.user_id == current_user.id,
+    #                                                                         Friendship.friend_id == userID).first()
+    #         print(check_if_friend)
+            
+    #         check_if_pending = db.session.query(Friendshiprequest.user_id).filter(Friendshiprequest.user_id == current_user.id,
+    #                                                                             Friendshiprequest.friend_id == userID).first()
+    #         print(check_if_pending)
+    #         if check_if_friend:
+    #             state = 'friend'
+    #             # user = User.query.filter_by(id=check_if_friend[0]).first()
+    #         elif check_if_pending:
+    #             state = 'pending'
+    #             # user = User.query.filter_by(id=check_if_pending[0]).first()
+    return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user': user, 'age': age,
+    'my_posts': my_posts, 'state': state })
 
 
 
@@ -285,39 +299,40 @@ def profile():
 @login_required
 def find_friends():
     all_users = ""
-    pending_user = db.session.query(
-        Friendshiprequest,
-        User
-    )\
-    .filter(Friendshiprequest.user_id == current_user.id)\
-    .join(User, User.id == Friendshiprequest.friend_id).all()
-    
-    subquery1 = db.session.query(
-        Friendship.friend_id
-    )\
-    .join(User, User.id == current_user.id)\
-    .filter(Friendship.user_id == current_user.id)\
-    .subquery()
-    subquery2 = db.session.query(
-        Friendshiprequest.friend_id
-    )\
-    .filter(Friendshiprequest.user_id == current_user.id)\
-    .subquery()
+    with app.app_context():
+        pending_user = db.session.query(
+            Friendshiprequest,
+            User
+        )\
+        .filter(Friendshiprequest.user_id == current_user.id)\
+        .join(User, User.id == Friendshiprequest.friend_id).all()
+        
+        subquery1 = db.session.query(
+            Friendship.friend_id
+        )\
+        .join(User, User.id == current_user.id)\
+        .filter(Friendship.user_id == current_user.id)\
+        .subquery()
+        subquery2 = db.session.query(
+            Friendshiprequest.friend_id
+        )\
+        .filter(Friendshiprequest.user_id == current_user.id)\
+        .subquery()
 
-    subquery3 = db.session.query(
-        Friendshiprequest.user_id,
-    )\
-    .filter(Friendshiprequest.friend_id == current_user.id)\
-    .join(User, User.id == Friendshiprequest.user_id)\
-    .subquery()
+        subquery3 = db.session.query(
+            Friendshiprequest.user_id,
+        )\
+        .filter(Friendshiprequest.friend_id == current_user.id)\
+        .join(User, User.id == Friendshiprequest.user_id)\
+        .subquery()
 
-    print(subquery3)
+        print(subquery3)
 
-    not_friend_users = db.session.query(
-        User
-    )\
-    .filter(User.id != current_user.id, ~User.id.in_(subquery1), ~User.id.in_(subquery2), ~User.id.in_(subquery3))\
-    .all()
+        not_friend_users = db.session.query(
+            User
+        )\
+        .filter(User.id != current_user.id, ~User.id.in_(subquery1), ~User.id.in_(subquery2), ~User.id.in_(subquery3))\
+        .all()
 
     return render_template('find_friends.html', data={'pending_user': pending_user, 'not_friend_users': not_friend_users})
     
@@ -405,23 +420,25 @@ def send_request(new_friend_id):
 @app.route('/friend_requests', methods=['GET', 'POST'])
 @login_required
 def friend_requests():
-    user_requests = db.session.query(
-        Friendshiprequest,
-        User
-    )\
-    .filter(Friendshiprequest.friend_id == current_user.id)\
-    .join(User, User.id == Friendshiprequest.user_id).all()
+    with app.app_context():
+        user_requests = db.session.query(
+            Friendshiprequest,
+            User
+        )\
+        .filter(Friendshiprequest.friend_id == current_user.id)\
+        .join(User, User.id == Friendshiprequest.user_id).all()
     return render_template('friend_requests.html', data={'user_requests': user_requests})
 
 
 @app.route('/friend_requests_accept/<friendID>', methods=['GET', 'POST'])
 @login_required
 def accept_friend_request(friendID):
-    added_user = db.session.query(
-        User
-    )\
-    .filter(User.id == friendID).first()
     with app.app_context():
+        added_user = db.session.query(
+            User
+        )\
+        .filter(User.id == friendID).first()
+        print(added_user.no_of_friends)
         new_friendship_1 = Friendship(
             user_id = current_user.id,
             friend_id = friendID
@@ -438,28 +455,39 @@ def accept_friend_request(friendID):
         .filter(Friendshiprequest.friend_id == current_user.id)\
         .first()
 
-        current_user.pendings = current_user.pendings - 1
-        current_user.no_of_friends = current_user.no_of_friends + 1
+        curr_user = db.session.query(User).filter(User.id == current_user.id).first()
+        print(current_user.username)
+        curr_user.pendings = curr_user.pendings - 1
+        curr_user.no_of_friends = curr_user.no_of_friends + 1
+
+        print(added_user.no_of_friends)
         added_user.no_of_friends = added_user.no_of_friends + 1
+
+        print(added_user.username)
+
+        print(added_user.no_of_friends)
 
         db.session.add(new_friendship_1)
         db.session.add(new_friendship_2)
         db.session.delete(accepted_request)
         db.session.commit()
+        print("--------------------------------")
 
-    flash(f'{added_user.first_name} is now your friend!', 'success') 
-    return redirect('/friend_requests')
+        print(added_user.no_of_friends)
+
+        flash(f'{added_user.first_name} is now your friend!', 'success') 
+        return redirect('/friend_requests')
 
 
 @app.route('/friend_requests_decline/<friendID>', methods=['GET', 'POST'])
 @login_required
 def decline_friend_request(friendID):
-    added_user = db.session.query(
-        User
-    )\
-    .filter(User.id == friendID)\
-    .first()
     with app.app_context():
+        added_user = db.session.query(
+            User
+        )\
+        .filter(User.id == friendID)\
+        .first()
         accepted_request = db.session.query(
             Friendshiprequest
         )\
@@ -472,9 +500,9 @@ def decline_friend_request(friendID):
 
         db.session.commit()
 
-    flash(f"You just declined {added_user.first_name}'s request", 'info') 
-    return redirect('/friend_requests')
-        
+        flash(f"You just declined {added_user.first_name}'s request", 'info') 
+        return redirect('/friend_requests')
+            
 
 @app.route('/my_friends', methods=['GET', 'POST'])
 @login_required
@@ -494,11 +522,11 @@ def my_friends():
 @app.route('/remove_friend/<friendID>', methods=['GET', 'POST'])
 @login_required
 def remove_friend(friendID):
-    removed_friend = db.session.query(
-        User
-    )\
-    .filter(User.id == friendID).first()
     with app.app_context():
+        removed_friend = db.session.query(
+            User
+        )\
+        .filter(User.id == friendID).first()
         remove_query_1 = db.session.query(
             Friendship
         )\
@@ -509,15 +537,15 @@ def remove_friend(friendID):
         )\
         .filter(Friendship.user_id == current_user.id, Friendship.friend_id == removed_friend.id)\
         .first()
-        db.session.delete(remove_query_1)
-        db.session.delete(remove_query_2)
         current_user.no_of_friends = current_user.no_of_friends - 1
         removed_friend.no_of_friends = removed_friend.no_of_friends - 1
+        db.session.delete(remove_query_1)
+        db.session.delete(remove_query_2)
 
         db.session.commit()
 
-    flash(f"You removed {removed_friend.first_name} from your friends!", "info")
-    return redirect('/my_friends')
+        flash(f"You removed {removed_friend.first_name} from your friends!", "info")
+        return redirect('/my_friends')
 
 
 @app.route('/cancel_request/<friendID>', methods=['GET', 'POST'])

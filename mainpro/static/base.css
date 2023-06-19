@@ -1,5 +1,5 @@
 .content{
-    background-color: black;
+    background-color: rgb(147, 144, 164);
     height: 100vh;
     color: white;
     display: flex;
@@ -8,13 +8,30 @@
 }
 
 .content_home{
-    background-color: green;
-    height: 100vh;
-    color: white;
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+
 }
+
+.profile-picture img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.post-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 
 .content_form{
     height: 100vh;
@@ -24,7 +41,7 @@
 }
 
 .content_friends_requests{
-    background-color: rgb(37, 37, 72);
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
     min-height: 100vh;

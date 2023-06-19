@@ -22,7 +22,7 @@
     {% block navbar %}
         <nav class="navbar navbar-expand-lg px-5 navbar-dark bg-dark position-fixed w-100 z-1">
             <div class="container-fluid">
-            <a class="navbar-brand" href="/">Connect Me</a>
+            <a class="navbar-brand" href="/home">Connect Me</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,8 +34,9 @@
                             <a class="nav-link" href={{ url_for('home')}}>Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">{{current_user.username}}</a>
+                            <a class="nav-link" href={{ url_for('profile', userID = current_user.id)}}>My profile</a>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link" href={{ url_for('my_friends')}}>My friends</a>
                         </li>
@@ -71,19 +72,17 @@
         </nav>
     {% endblock %}
 
-    <div class="container">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class=" m-2 alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-    </div>
-                
+
+       
+                    
+    <
     {% block content %}
+        <div class='content'>
+            <button data-text="Awesome" class="button disabled">
+                <span class="actual-text">&nbsp;CONNECT ME&nbsp;</span>
+                <span class="hover-text" aria-hidden="true">&nbsp;CONNECT ME&nbsp;</span>
+            </button>
+        </div>
     {% endblock %}
     
     <!-- BOOTSTRAP -->

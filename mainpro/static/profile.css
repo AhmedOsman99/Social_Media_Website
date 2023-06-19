@@ -9,6 +9,10 @@
     align-items: center;
 }
 
+.long{
+    min-height: 100vh;
+}
+
 .profile-picture img {
     width: 150px;
     height: 150px;
